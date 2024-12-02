@@ -1,0 +1,8 @@
+
+State Machine - |cpu|processor:processador|state
+Name state.RINST state.MEM state.OP state.IDLE state.RESET 
+state.RESET 0 0 0 0 0 
+state.IDLE 0 0 0 1 1 
+state.OP 0 0 1 0 1 
+state.MEM 0 1 0 0 1 
+state.RINST 1 0 0 0 1 

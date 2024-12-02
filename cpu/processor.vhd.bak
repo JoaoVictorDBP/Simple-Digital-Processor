@@ -1,0 +1,288 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity processor is
+    port(
+		btt    : in std_logic;
+                clk    : in std_logic;
+                input  : in std_logic_vector(7 downto 0);
+		output : out std_logic_vector(7 downto 0); -- talvez troca isso pros negocio do display de 7 segmentos
+                rst    : in std_logic;
+		
+		-- memory related stuff
+                address : inout std_logic_vector(0 to 7);
+		m_r    : in std_logic_vector(0 to 7);
+		m_w    : out std_logic_vector(0 to 7);
+		ldmem  : out std_logic;
+		stmem  : out std_logic
+	);
+end processor;
+
+architecture p of processor is
+type reg is array(0 to 2) of unsigned(0 to 7);
+type p_st is (RESET, IDLE, OP_REG, OP_MEM, ESPERA, ENTRADA, MEM, RDCMMEM1, RDCMMEM2);
+
+shared variable state   : p_st := RESET;
+--shared variable m_state : m_st := IDLE;
+
+shared variable command : std_logic_vector(0 to 15);
+
+-- regA: 0, regB: 1, regR: 2
+signal registers : reg;
+
+-- buses connecting the registers
+shared variable regb   : unsigned(0 to 7);
+
+-- flags: zero, signal, carry, overflow
+signal flags 		    : std_logic_vector(0 to 3);
+
+begin
+
+	process(clk)	
+	variable iinstruction 	   : integer range 0 to 15 := 0;
+
+	variable regI              : unsigned(0 to 7);
+	variable int   		   : unsigned(0 to 7);
+	
+	-- to check if there is overflow or carry
+	variable overflow   : std_logic;
+	
+	variable reg1, reg2 : integer range 0 to 2; -- index of the registers A, B and R
+	
+	begin
+	
+		if rst = '0' then
+                    
+                    state := RESET;
+
+                elsif state = RESET then
+		
+			-- reset everything
+			state := IDLE;
+			address <= "00000000";
+			command := "0000000000000000";
+			iinstruction := 0;
+			registers(0) <= "00000000";
+			registers(1) <= "00000000";
+			registers(2) <= "00000000";
+			reg1 := 0;
+			reg2 := 0;
+			overflow := '0';
+                        stmem <= '0';
+                        ldmem <= '0';
+		
+		elsif rising_edge(clk) then
+		
+			if state = RDCMMEM1 then
+				address <= std_logic_vector(unsigned(address) + 1);
+				command(0 to 7) := m_r;
+				state := RDCMMEM2;
+				
+			elsif state = RDCMMEM2 then
+			
+                                addr_temp <= 
+				address <= std_logic_vector(unsigned(address) + 1);
+				command(8 to 15) := m_r;
+				ldmem <= '0';
+				state := IDLE;
+				
+			elsif state = IDLE then
+			
+				-- read the instruction from the memory
+				iinstruction := to_integer(unsigned(command(0 to 3)));
+				
+				-- assign the indexes of the registers to reg1 and reg2
+				-- and assign the last 8 bits to int
+				reg1 := to_integer(unsigned(command(5 to 6)));
+				reg2 := to_integer(unsigned(command(7 to 8)));
+				int  := unsigned(command(8 to 15));
+				
+				-- change state
+				if (iinstruction < 8) then
+					state := OP_REG;
+				elsif (iinstruction < 13) then
+					state := OP_MEM;
+				elsif (iinstruction < 14) then
+					state := ENTRADA;
+				else
+					state := ESPERA;
+				end if;
+				
+			elsif state /= MEM then
+				
+				-- execute the command
+				if state = OP_REG then
+					-- operations that don't use memory
+					
+					case iinstruction is
+						when 0 =>
+							-- ADD
+							if (command(4) = '1') then
+								regI := (registers(reg1) + int) mod 255;
+								if registers(reg1) + int > 255 then
+									overflow := '1';
+								else
+									overflow := '0';
+								end if;
+							else
+								regI := (registers(reg1) + registers(reg2)) mod 255;
+								if registers(reg1) + registers(reg2) > 255 then
+									overflow := '1';
+								else
+									overflow := '0';
+								end if;
+							end if;
+							
+							flags(3) <= overflow;
+						when 1 =>
+							-- SUB
+							
+							-- maybe put a flag here if the second if bigger?
+							if (command(4) = '1') then
+								regI := (registers(reg1) - int) mod 255;
+								if int > registers(reg1) then
+									flags(3) <= '1'; -- maybe put this in anothe flag
+								end if;
+							else
+								regI := (registers(reg1) - registers(reg2)) mod 255;
+								if registers(reg2) > registers(reg1) then
+									flags(3) <= '1';
+								end if;
+							end if;
+						when 2 =>
+							-- AND
+							if command(4) = '1' then
+								regI := registers(reg1) and int;
+							else
+								regI := registers(reg1) and registers(reg2);
+							end if;
+							
+							flags(3) <= '0';
+						when 3 =>
+							-- OR
+							if command(4) = '1' then
+								regI := registers(reg1) or int;
+							else
+								regI := registers(reg1) or registers(reg2);
+							end if;
+							
+							flags(3) <= '0';
+						when 4 =>
+							-- NOT
+							regI := not registers(reg1);
+							
+							flags(3) <= '0';
+						when 5 =>
+							-- CMP
+							
+							-- I don't know which flags to change. for now I'll only 
+							-- change th overflow one
+							if command(4) = '1' then
+								if registers(reg1) = int then
+									flags <= "1000";
+								else
+									if registers(reg1) < int then
+										flags <= "0100";
+									else
+										flags <= "0000";
+									end if;
+								end if;
+							else
+								if registers(reg1) = registers(reg2) then
+									flags <= "1000";
+								else
+									if registers(reg1) < registers(reg2) then
+										flags <= "0100";
+									else
+										flags <= "0000";
+									end if;
+								end if;
+							end if;
+						when 6 =>
+							-- MOV
+							if command(4) = '1' then
+								registers(reg1) <= int;
+							else
+								registers(reg1) <= registers(reg2);
+							end if;
+						when 7 =>
+							-- OUT
+							output <= std_logic_vector(registers(reg1));
+						when others =>
+					end case;
+					
+					if iinstruction < 7 then
+						registers(2) <= regI;
+					end if;
+					
+					state := RDCMMEM1;
+					
+				elsif state = OP_MEM then
+					-- operations that have memory as an input 
+					
+					-- i don't know if this is the right way of doing this
+					
+					case iinstruction is
+						when 8 =>
+							-- JMP
+							address <= std_logic_vector(int);
+							state := RDCMMEM1;
+						when 9 =>
+							-- JEQ
+							if flags(0) = '1' then
+								address <= std_logic_vector(int);
+							end if;
+							
+							state := RDCMMEM1;
+						when 10 =>
+							-- JGR
+							-- not flags(0): n1 != n2
+							-- not flags(1): n1 > n2
+							if flags(0) = '0' and flags(1) = '0' then
+								address <= std_logic_vector(int);
+							end if;
+							
+							state := RDCMMEM1;
+						when 11 =>
+							-- STORE
+							-- check if this is right
+							stmem <= '1';
+							regI := unsigned(address);
+							address <= std_logic_vector(int);
+							state := MEM;
+						when 12 =>
+							-- LOAD
+							ldmem <= '1';
+							regI := unsigned(address);
+							address <= std_logic_vector(int);
+							state := MEM;
+						when others =>
+					end case;	
+				else
+					if btt = '0' then
+						if state = ENTRADA then
+							registers(reg1) <= unsigned(input);
+						end if;
+						
+						state := RDCMMEM1;
+					end if;
+				end if;			
+			elsif state = MEM then
+			
+				if iinstruction = 12 then
+					regb := unsigned(m_r);
+					registers(reg1) <= regb;
+					state := RDCMMEM1;
+					ldmem <= '0';
+				elsif iinstruction = 11 then 
+					m_w <= std_logic_vector(registers(reg1));
+					state := RDCMMEM1;
+					stmem <= '0';
+				end if;
+				
+				address <= std_logic_vector(regI);
+			end if;
+		end if;
+	end process;	
+end architecture;

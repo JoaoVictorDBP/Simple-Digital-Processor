@@ -1,0 +1,133 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/simulation/modelsim
+Ecpu
+Z1 w1733159492
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z4 8C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/cpu.vhd
+Z5 FC:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/cpu.vhd
+l0
+L5
+V4kzNj_3dRf4RGDE:mM@ln3
+!s100 NJ@5o>V^0C]>N0k>H[Si_0
+Z6 OV;C;10.5b;63
+31
+Z7 !s110 1733165423
+!i10b 1
+Z8 !s108 1733165423.000000
+Z9 !s90 -reportprogress|300|-93|-work|work|C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/cpu.vhd|
+Z10 !s107 C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/cpu.vhd|
+!i113 1
+Z11 o-93 -work work
+Z12 tExplicit 1 CvgOpt 0
+Alogic
+Z13 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z14 DEx4 work 9 processor 0 22 W_AU]`L3kRflAkcN<PaMb1
+R2
+R3
+DEx4 work 3 cpu 0 22 4kzNj_3dRf4RGDE:mM@ln3
+l31
+L15
+V:@`IKb@e]d]c2NOEmobzZ0
+!s100 DRG=imJ4bhIi0aUNFUhG71
+R6
+31
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Eprocessor
+Z15 w1733164968
+R13
+R2
+R3
+R0
+Z16 8C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/processor.vhd
+Z17 FC:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/processor.vhd
+l0
+L5
+VW_AU]`L3kRflAkcN<PaMb1
+!s100 c]Z;WPSFK1;SiH5I6jiLW1
+R6
+31
+Z18 !s110 1733165422
+!i10b 1
+Z19 !s108 1733165422.000000
+Z20 !s90 -reportprogress|300|-93|-work|work|C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/processor.vhd|
+Z21 !s107 C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/processor.vhd|
+!i113 1
+R11
+R12
+Ap
+R13
+R2
+R3
+R14
+l39
+L21
+VbSDBG63PzVN9UP<oZ1U:z3
+!s100 >9T[7_E<J5OZ;Pzi@1OB<0
+R6
+31
+R18
+!i10b 1
+R19
+R20
+R21
+!i113 1
+R11
+R12
+Eram
+Z22 w1733165297
+Z23 DPx9 altera_mf 20 altera_mf_components 0 22 GX]PGX0dkGdbU698H0h^l0
+R2
+R3
+R0
+Z24 8C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/ram.vhd
+Z25 FC:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/ram.vhd
+l0
+L43
+VOgTz]2Ng3EDfVH]g4=Ook1
+!s100 ^NfWWSb>Y?_8njT?20R>72
+R6
+31
+R7
+!i10b 1
+R8
+Z26 !s90 -reportprogress|300|-93|-work|work|C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/ram.vhd|
+Z27 !s107 C:/Users/15577631/Downloads/cpu-20241202T170924Z-001/cpu/ram.vhd|
+!i113 1
+R11
+R12
+Asyn
+R23
+R2
+R3
+DEx4 work 3 ram 0 22 OgTz]2Ng3EDfVH]g4=Ook1
+l59
+L55
+V22Kdo:[OdID=ZVQGXTka@1
+!s100 UZEV;T8c?T62l=TTghBbB2
+R6
+31
+R7
+!i10b 1
+R8
+R26
+R27
+!i113 1
+R11
+R12
