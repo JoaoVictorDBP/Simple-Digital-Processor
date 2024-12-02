@@ -1,7 +1,7 @@
-# Simple-Digital-Processor
+# Simple-Digital-Processor (processador digital simples)
 Trabalho Final
 
-# Estrutura da palavra:
+# Word-Structure (estrutura da palavra):
 
 Palavra de 16 bits 
 
