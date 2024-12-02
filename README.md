@@ -20,18 +20,18 @@ Inteiro / Endereço: bits 7 - 0
 
 # Instructions (instruções)
 
-ADD: 0000 </br>
-SUB:  0001 </br>
-AND: 0010 </br>
-OR: 0011 </br>
-NOT: 0100 </br>
-CMP: 0101 </br>
-MOV: 0110 </br>
-OUT: 0111 </br>
-JMP: 1000 </br>
-JEQ: 1001 </br>
-JGR: 1010 </br>
+ADD:   0000 </br>
+SUB:   0001 </br>
+AND:   0010 </br>
+OR:    0011 </br>
+NOT:   0100 </br>
+CMP:   0101 </br>
+MOV:   0110 </br>
+OUT:   0111 </br>
+JMP:   1000 </br>
+JEQ:   1001 </br>
+JGR:   1010 </br>
 STORE: 1011 </br>
-LOAD: 1100 </br>
-IN: 1101 </br>
-WAIT: 1110 / 1111
+LOAD:  1100 </br>
+IN:    1101 </br>
+WAIT:  1110 / 1111
