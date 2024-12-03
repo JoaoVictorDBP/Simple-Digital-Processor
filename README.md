@@ -1,9 +1,10 @@
 # Simple-Digital-Processor (processador digital simples)
 Trabalho Final: consiste em um processador digital simples implementado com máquinas de estado para a disciplina Laboratório de Sistemas Digitais. </br>
+Visão geral: o processador criado em VHDL utiliza as entradas de uma placa FPGA do tipo DE2-115 e lê um arquivo de memória do tipo “.mif” onde há 256 palavras de 8 bits para executar instruções.
 Integrantes:
-* João Victor De Bortoli Prado - 13672071
-* Samuel Sandoval Bonachela - 13686282
-* Lucas Rodriges Baptista - 15577631
+* João Victor De Bortoli Prado
+* Samuel Sandoval Bonachela
+* Lucas Rodriges Baptista
 
 # Word-Structure (estrutura da palavra):
 
