@@ -160,17 +160,21 @@ begin
 								if (command(4) = '1') then
 									if int > registers(reg1) then
 										regI := int - registers(reg1);
-										flags(2) <= '1'; 
+										flags(1) <= '1'; 
+										flags(2) <= '1';
 									else
 										regI := registers(reg1) - int;
+										flags(1) <= '0';
 										flags(2) <= '0';
 									end if;
 								else
 									if registers(reg2) > registers(reg1) then
 										regI := registers(reg2) - registers(reg1);
+										flags(1) <= '1';
 										flags(2) <= '1';
 									else
 										regI := registers(reg1) - registers(reg2);
+										flags(1) <= '0';
 										flags(2) <= '0';
 									end if;
 								end if;
@@ -200,26 +204,30 @@ begin
 							when x"5" =>
 								-- CMP
 								
-								if command(4) = '1' then
-									if registers(reg1) = int then
-										flags <= "1000";
-									else
-										if registers(reg1) < int then
-											flags <= "0100";
+								if flags(1) = '0' then
+									if command(4) = '1' then
+										if registers(reg1) = int then
+											flags <= "1000";
 										else
-											flags <= "0000";
+											if registers(reg1) < int then
+												flags <= "0100";
+											else
+												flags <= "0000";
+											end if;
+										end if;
+									else
+										if registers(reg1) = registers(reg2) then
+											flags <= "1000";
+										else
+											if registers(reg1) < registers(reg2) then
+												flags <= "0100";
+											else
+												flags <= "0000";
+											end if;
 										end if;
 									end if;
 								else
-									if registers(reg1) = registers(reg2) then
-										flags <= "1000";
-									else
-										if registers(reg1) < registers(reg2) then
-											flags <= "0100";
-										else
-											flags <= "0000";
-										end if;
-									end if;
+									flags <= "0100";
 								end if;
 							when x"6" =>
 								-- MOV
