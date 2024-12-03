@@ -39,4 +39,4 @@ Registrador R: 10
 * 1100 - LOAD </br>
 * 1101 - IN </br>
 * 1110 - WAIT </br>
-1111 - WAIT
+* 1111 - WAIT
